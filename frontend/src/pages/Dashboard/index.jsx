@@ -3,6 +3,8 @@ import { Container, Content, Label, BoxVideos, BoxActions, Video } from "./style
 import io from "socket.io-client";
 import Peer from "simple-peer";
 
+import { useToast } from "../../hooks/toast";
+
 const Dashboard = () => {
 
   const [yourID, setYourID] = useState("");
@@ -13,6 +15,8 @@ const Dashboard = () => {
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
   const [serverFull, setServerFull] = useState(false);
+
+  const { addToast } = useToast();
 
   const userVideo = useRef();
   const partnerVideo = useRef();
@@ -41,6 +45,12 @@ const Dashboard = () => {
       setReceivingCall(true);
       setCaller(data.from);
       setCallerSignal(data.signal);
+
+      addToast({
+        type: "success",
+        title: "Trim Trim",
+        description: "Um nova ligação recebida",
+      });
     });
 
   }, []);
@@ -102,6 +112,8 @@ const Dashboard = () => {
     });;
 
     peer.signal(callerSignal);
+
+    setReceivingCall(false);
   }
 
   return (
@@ -131,9 +143,11 @@ const Dashboard = () => {
                     return null;
                   }
                   return (
-                    <div key={key}>
-                      <button className="call-button" onClick={() => callPeer(key)}>Ligar para {key}</button>
-                    </div>
+                    !receivingCall && !callAccepted && (
+                      <div key={key}>
+                        <button className="call-button" onClick={() => callPeer(key)}>Ligar para {key}</button>
+                      </div>
+                    )
                   );
                 })}
 
