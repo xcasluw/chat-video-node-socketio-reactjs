@@ -91,6 +91,8 @@ const Dashboard = () => {
       setCallAccepted(true);
       peer.signal(signal);
     });
+
+
   }
 
   function acceptCall() {
@@ -118,18 +120,12 @@ const Dashboard = () => {
 
   function turnOff() {
 
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: stream
-    });
-
-    peer.removeStream(stream);
+    setCallAccepted(false);
 
     setReceivingCall(false);
 
     addToast({
-      type: "danger",
+      type: "error",
       title: "Desligando...",
       description: "Chamada desligada",
     });
@@ -179,7 +175,7 @@ const Dashboard = () => {
 
                 {callAccepted && (
                   <div className="div-accept" key={caller}>
-                    <button className="turnoff-button" onClick={turnOff}>Desligar</button>
+                    <button className="turnoff-button" onClick={() => turnOff()}>Desligar</button>
                   </div>
                 )}
               </BoxActions>

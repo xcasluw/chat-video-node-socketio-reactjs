@@ -29,6 +29,11 @@ io.on('connection', socket => {
     io.to(data.to).emit("callAccepted", data.signal);
   });
 
+  socket.on("turnOff", (data) => {
+    console.log("AQUI")
+    io.emit("hangUpCall", data.signal);
+  });
+
 });
 
 server.listen(3001, () => console.log('server is running on port 3001'));
