@@ -41,7 +41,7 @@ const Dashboard = () => {
       setUsers(users);
     });
 
-    socket.current.on("hey", (data) => {
+    socket.current.on("incomingCall", (data) => {
       setReceivingCall(true);
       setCaller(data.from);
       setCallerSignal(data.signal);
@@ -53,7 +53,7 @@ const Dashboard = () => {
       });
     });
 
-  }, []);
+  }, [addToast]);
 
   function callPeer(id) {
 
@@ -116,6 +116,25 @@ const Dashboard = () => {
     setReceivingCall(false);
   }
 
+  function turnOff() {
+
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: stream
+    });
+
+    peer.removeStream(stream);
+
+    setReceivingCall(false);
+
+    addToast({
+      type: "danger",
+      title: "Desligando...",
+      description: "Chamada desligada",
+    });
+  }
+
   return (
     <Container>
       <Content>
@@ -155,6 +174,12 @@ const Dashboard = () => {
                   <div className="div-accept" key={caller}>
                     <h4>{caller} está te ligando</h4>
                     <button className="accept-button" onClick={acceptCall}>Aceitar</button>
+                  </div>
+                )}
+
+                {callAccepted && (
+                  <div className="div-accept" key={caller}>
+                    <button className="turnoff-button" onClick={turnOff}>Desligar</button>
                   </div>
                 )}
               </BoxActions>
